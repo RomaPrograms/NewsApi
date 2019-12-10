@@ -10,14 +10,14 @@ import java.util.Set;
 public class NewsContent {
     @Column(name = "id", length = 6, nullable = false)
     @GeneratedValue(generator = "increment")
-    @GenericGenerator(name="increment", strategy = "increment")
+    @GenericGenerator(name = "increment", strategy = "increment")
     private long id;
 
     @Column(name = "content")
     private String content;
 
     @ManyToOne
-    @JoinColumn(name="news_id", nullable=false)
+    @JoinColumn(name = "news_id", nullable = false)
     private News aNews;
 
     @OneToMany(mappedBy = "comments")

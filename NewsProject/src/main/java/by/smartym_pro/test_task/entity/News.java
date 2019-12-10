@@ -10,14 +10,14 @@ import java.util.Set;
 public class News {
     @Id
     @GeneratedValue(generator = "increment")
-    @GenericGenerator(name="increment", strategy = "increment")
+    @GenericGenerator(name = "increment", strategy = "increment")
     @Column(name = "id", length = 6, nullable = false)
     private long id;
 
     @Column(name = "topic")
     private String topic;
 
-    @OneToMany(mappedBy="newsContent")
+    @OneToMany(mappedBy = "newsContent")
     private Set<NewsContent> newsContentSet;
 
     public long getId() {

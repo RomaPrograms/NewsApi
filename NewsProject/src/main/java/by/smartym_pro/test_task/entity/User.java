@@ -9,7 +9,7 @@ import javax.persistence.*;
 public class User {
     @Id
     @GeneratedValue(generator = "increment")
-    @GenericGenerator(name="increment", strategy = "increment")
+    @GenericGenerator(name = "increment", strategy = "increment")
     @Column(name = "id", length = 6, nullable = false)
     private long id;
 

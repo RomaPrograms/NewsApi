@@ -9,7 +9,7 @@ import javax.persistence.*;
 public class Comment {
     @Id
     @GeneratedValue(generator = "increment")
-    @GenericGenerator(name="increment", strategy = "increment")
+    @GenericGenerator(name = "increment", strategy = "increment")
     @Column(name = "id", length = 6, nullable = false)
     private long id;
 
@@ -17,6 +17,6 @@ public class Comment {
     private String content;
 
     @ManyToOne
-    @JoinColumn(name="newsContent_id", nullable=false)
+    @JoinColumn(name = "newsContent_id", nullable = false)
     private NewsContent newsContent;
 }
