@@ -1,11 +1,12 @@
 package by.smartym_pro.test_task.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 
 @Entity
-@Table(name = "user")
+@Table(name = "users")
 public class User {
     @Id
     @GeneratedValue(generator = "increment")
@@ -13,17 +14,31 @@ public class User {
     @Column(name = "id", length = 6, nullable = false)
     private long id;
 
-    @Column(name = "name")
+    @Column(name = "name", length = 30)
     private String name;
 
-    @Column(name = "login")
+    @Column(name = "login", unique = true, length = 30, nullable = false)
     private String login;
 
-    @Column(name = "password")
+    @Column(name = "password", nullable = false)
     private String password;
 
+    @Column(name = "type", nullable = false)
     @Enumerated(EnumType.STRING)
     private UserType type;
+
+    public User() {
+
+    }
+
+    public User(
+            @JsonProperty("name") String name,
+            @JsonProperty("login") String login,
+            @JsonProperty("password") String password) {
+        this.name = name;
+        this.login = login;
+        this.password = password;
+    }
 
     public long getId() {
         return id;
@@ -55,5 +70,24 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public UserType getType() {
+        return type;
+    }
+
+    public void setType(UserType type) {
+        this.type = type;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", login='" + login + '\'' +
+                ", password='" + password + '\'' +
+                ", type=" + type +
+                '}';
     }
 }
