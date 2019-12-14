@@ -8,6 +8,7 @@ import java.util.Set;
 @Entity
 @Table(name = "newsContent")
 public class NewsContent {
+    @Id
     @Column(name = "id", length = 6, nullable = false)
     @GeneratedValue(generator = "increment")
     @GenericGenerator(name = "increment", strategy = "increment")
@@ -17,11 +18,11 @@ public class NewsContent {
     private String content;
 
     @ManyToOne
-    @JoinColumn(name = "news_id", nullable = false)
-    private News aNews;
+    private News news;
 
-    @OneToMany(mappedBy = "comments")
-    private Set<NewsContent> newsContentSet;
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "comments_id")
+    private Set<Comment> newsCommentSet;
 
     public long getId() {
         return id;
