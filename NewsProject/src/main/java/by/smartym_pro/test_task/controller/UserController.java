@@ -69,7 +69,7 @@ public class UserController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        Optional<User> optionalUser
+        User optionalUser
                 = this.userRepository.findByLogin(user.getLogin());
 //        if (optionalUser.isPresent()
 //                && BCrypt.checkpw(user.getPassword(), optionalUser.get().getPassword())) {

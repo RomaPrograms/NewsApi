@@ -10,7 +10,7 @@ import java.util.Optional;
 
 @Repository
 public interface NewsRepository extends JpaRepository<News, Long> {
-    @Query(value = "SELECT * FROM news n where n.topic in ?1",
-            nativeQuery = true)
+//    @Query(value = "SELECT * FROM news n where n.topic in ?1",
+//            nativeQuery = true)
     Optional<List<News>> findByTopic(List<String> topic);
 }
