@@ -26,22 +26,23 @@ public class UserController {
         HttpHeaders headers = new HttpHeaders();
         HttpSession session = request.getSession();
 
-        if(user == null) {
+        if (user == null) {
             request.setAttribute("ERROR_MESSAGE",
                     "Not enough data for saving user.");
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        if(session.getAttribute("ROLE").equals(UserType.ADMIN)) {
-            user.setType(UserType.ADMIN);
-        }
-        else if(session.getAttribute("ROLE").equals(UserType.USER)) {
-            request.setAttribute("ERROR_MESSAGE",
-                    "You can not do this because you signed up already.");
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        } else {
-            user.setType(UserType.USER);
-        }
+//        if (session.getAttribute("ROLE") != null
+//                && session.getAttribute("ROLE").equals(UserType.ADMIN)) {
+//            user.setType(UserType.ADMIN);
+//        } else if (session.getAttribute("ROLE") != null
+//                && session.getAttribute("ROLE").equals(UserType.USER)) {
+//            request.setAttribute("ERROR_MESSAGE",
+//                    "You can not do this because you signed up already.");
+//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//        } else {
+//            user.setType(UserType.USER);
+//        }
 
         String hashedPassword
                 = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt());
@@ -59,21 +60,24 @@ public class UserController {
         HttpHeaders headers = new HttpHeaders();
         HttpSession session = request.getSession();
 
-         if(session.getAttribute("ROLE").equals(UserType.USER)) {
-             request.setAttribute("ERROR_MESSAGE",
-                     "You can not do this because you logged in already.");
-             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-         }
+        System.out.println(session.getAttribute("ROLE"));
+
+        if (session.getAttribute("ROLE") != null
+                && session.getAttribute("ROLE").equals(UserType.USER)) {
+            request.setAttribute("ERROR_MESSAGE",
+                    "You can not do this because you logged in already.");
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
 
         Optional<User> optionalUser
                 = this.userRepository.findByLogin(user.getLogin());
-        if(optionalUser.isPresent()
-                && BCrypt.checkpw(user.getPassword(), optionalUser.get().getPassword())) {
-            optionalUser.get().setPassword("");
-            session.setAttribute("ROLE", user.getType());
-            return new ResponseEntity<>(optionalUser.get(),
-                    headers, HttpStatus.OK);
-        }
+//        if (optionalUser.isPresent()
+//                && BCrypt.checkpw(user.getPassword(), optionalUser.get().getPassword())) {
+//            optionalUser.get().setPassword("");
+//            session.setAttribute("ROLE", user.getType());
+//            return new ResponseEntity<>(optionalUser.get(),
+//                    headers, HttpStatus.OK);
+//        }
 
         request.setAttribute("ERROR_MESSAGE",
                 "Incorrect password or login.");

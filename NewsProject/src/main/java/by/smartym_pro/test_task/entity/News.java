@@ -22,7 +22,8 @@ public class News {
     @JoinColumn(name = "newsContent_id")
     private Set<NewsContent> newsContentSet;
 
-    public News() {}
+    public News() {
+    }
 
     public News(@JsonProperty("topic") String topic) {
         System.out.println("Lukky");
@@ -44,12 +45,12 @@ public class News {
     public void setTopic(String topic) {
         this.topic = topic;
     }
-//
-//    public Set<NewsContent> getNewsContentSet() {
-//        return newsContentSet;
-//    }
-//
-//    public void setNewsContentSet(Set<NewsContent> newsContentSet) {
-//        this.newsContentSet = newsContentSet;
-//    }
+
+    public Set<NewsContent> getNewsContentSet() {
+        return newsContentSet;
+    }
+
+    public void setNewsContentSet(Set<NewsContent> newsContentSet) {
+        this.newsContentSet = newsContentSet;
+    }
 }

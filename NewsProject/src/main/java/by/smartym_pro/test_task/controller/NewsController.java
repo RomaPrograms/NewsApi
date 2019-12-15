@@ -26,11 +26,11 @@ public class NewsController {
         HttpHeaders headers = new HttpHeaders();
         HttpSession session = request.getSession();
 
-        if (session.getAttribute("ROLE") == null) {
-            request.setAttribute("ERROR_MESSAGE",
-                    "Sorry, but you should be logged in to view the news.");
-            return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
-        }
+//        if (session.getAttribute("ROLE") == null) {
+//            request.setAttribute("ERROR_MESSAGE",
+//                    "Sorry, but you should be logged in to view the news.");
+//            return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+//        }
 
         Optional<List<News>> newsList
                 = Optional.of(this.newsRepository.findAll());
@@ -48,17 +48,17 @@ public class NewsController {
         HttpHeaders headers = new HttpHeaders();
         HttpSession session = request.getSession();
 
-        if (session.getAttribute("ROLE") == null) {
-            request.setAttribute("ERROR_MESSAGE",
-                    "Sorry, but you should be logged in to view the news.");
-            return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
-        }
-
-        if (topics.isEmpty()) {
-            request.setAttribute("ERROR_MESSAGE",
-                    "Incorrect data for this operation.");
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+//        if (session.getAttribute("ROLE") == null) {
+//            request.setAttribute("ERROR_MESSAGE",
+//                    "Sorry, but you should be logged in to view the news.");
+//            return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+//        }
+//
+//        if (topics.isEmpty()) {
+//            request.setAttribute("ERROR_MESSAGE",
+//                    "Incorrect data for this operation.");
+//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//        }
         Optional<List<News>> newsList = this.newsRepository.findByTopic(topics);
 
         return newsList.map(

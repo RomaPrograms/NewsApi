@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -23,9 +24,15 @@ public class User {
     @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "type", nullable = false)
-    @Enumerated(EnumType.STRING)
-    private UserType type;
+//    @Enumerated(EnumType.STRING)
+//    @Column(name = "type", nullable = false)
+//    private UserType type;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "user_roles",
+            joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")})
+    private List<Role> roles;
 
     public User() {
 
@@ -72,22 +79,20 @@ public class User {
         this.password = password;
     }
 
-    public UserType getType() {
-        return type;
+//    public UserType getType() {
+//        return type;
+//    }
+//
+//    public void setType(UserType type) {
+//        this.type = type;
+//    }
+
+
+    public List<Role> getRoles() {
+        return roles;
     }
 
-    public void setType(UserType type) {
-        this.type = type;
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", login='" + login + '\'' +
-                ", password='" + password + '\'' +
-                ", type=" + type +
-                '}';
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
     }
 }
