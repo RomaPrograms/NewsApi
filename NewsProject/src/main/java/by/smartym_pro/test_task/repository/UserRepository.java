@@ -11,5 +11,5 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User, Long> {
 //    @Query(value = "SELECT * FROM users u where u.login = ?1",
 //            nativeQuery = true)
-    User findByLogin(String login);
+    User findByUsername(String username);
 }

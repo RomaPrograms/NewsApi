@@ -18,32 +18,29 @@ public class User {
     @Column(name = "name", length = 30)
     private String name;
 
-    @Column(name = "login", unique = true, length = 30, nullable = false)
-    private String login;
+    @Column(name = "username", unique = true, length = 30, nullable = false)
+    private String username;
 
     @Column(name = "password", nullable = false)
     private String password;
 
-//    @Enumerated(EnumType.STRING)
-//    @Column(name = "type", nullable = false)
-//    private UserType type;
-
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_roles",
-            joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
-            inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")})
+            joinColumns = {@JoinColumn(name = "user_id")},
+            inverseJoinColumns = {@JoinColumn(name = "role_id")})
     private List<Role> roles;
 
     public User() {
 
     }
 
+    //TODO delete JsonProperty.
     public User(
             @JsonProperty("name") String name,
-            @JsonProperty("login") String login,
+            @JsonProperty("username") String username,
             @JsonProperty("password") String password) {
         this.name = name;
-        this.login = login;
+        this.username = username;
         this.password = password;
     }
 
@@ -63,12 +60,12 @@ public class User {
         this.name = name;
     }
 
-    public String getLogin() {
-        return login;
+    public String getUsername() {
+        return username;
     }
 
-    public void setLogin(String login) {
-        this.login = login;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getPassword() {
@@ -78,15 +75,6 @@ public class User {
     public void setPassword(String password) {
         this.password = password;
     }
-
-//    public UserType getType() {
-//        return type;
-//    }
-//
-//    public void setType(UserType type) {
-//        this.type = type;
-//    }
-
 
     public List<Role> getRoles() {
         return roles;

@@ -33,7 +33,6 @@ public class UserServiceImpl implements UserService{
         List<Role> userRoles = new ArrayList<>();
         userRoles.add(roleUser);
 
-        user.setPassword(BCrypt.hashpw(user.getPassword(), BCrypt.gensalt()));
         user.setRoles(userRoles);
 
         User registeredUser = userRepository.save(user);
@@ -50,8 +49,8 @@ public class UserServiceImpl implements UserService{
 
     //TODO i need to use optionals, it's important
     @Override
-    public User findByLogin(String login) {
-        User result = userRepository.findByLogin(login);
+    public User findByUsername(String username) {
+        User result = userRepository.findByUsername(username);
         return result;
     }
 
