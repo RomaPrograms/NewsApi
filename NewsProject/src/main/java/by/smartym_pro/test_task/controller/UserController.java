@@ -1,14 +1,12 @@
 package by.smartym_pro.test_task.controller;
 
 import by.smartym_pro.test_task.dto.JwtRequestDto;
+import by.smartym_pro.test_task.dto.JwtResponseDto;
 import by.smartym_pro.test_task.dto.UserDto;
-import by.smartym_pro.test_task.entity.JwtResponse;
 import by.smartym_pro.test_task.entity.Role;
 import by.smartym_pro.test_task.entity.User;
-//import by.smartym_pro.test_task.security.jwt.JwtAuthenticationProvider;
 import by.smartym_pro.test_task.security.jwt.JwtTokenUtil;
 import by.smartym_pro.test_task.service.UserService;
-import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -27,12 +25,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * REST controller for authentication requests (login, logout, register, etc.)
+ * REST controller for authentication requests (login, logout, register, etc.).
  *
  * @author Semizhon Roman
  * @version 1.0
  */
-
 @RequestMapping("/users")
 @RestController
 @CrossOrigin
@@ -71,7 +68,7 @@ public class UserController {
 
             String token = jwtTokenUtil.generateToken(user.getUsername(), user.getRoles());
 
-            return ResponseEntity.ok(new JwtResponse(token));
+            return ResponseEntity.ok(new JwtResponseDto(token));
         } catch (AuthenticationException e) {
             throw new BadCredentialsException("Invalid username or password");
         }
@@ -102,8 +99,10 @@ public class UserController {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
         } catch (DisabledException e) {
+            //todo
             throw new Exception("USER_DISABLED", e);
         } catch (BadCredentialsException e) {
+            //todo
             throw new Exception("INVALID_CREDENTIALS", e);
         }
     }

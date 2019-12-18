@@ -21,7 +21,6 @@ import java.io.IOException;
  * @author Semizhon Roman
  * @version 1.0
  */
-
 @Component
 public class JwtTokenFilter extends OncePerRequestFilter {
 
@@ -34,14 +33,16 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     /**
      * Checks if request has a token. If yes then extract the token.
      *
-     * @param req - http request
-     * @param res - http response
+     * @param req         - http request
+     * @param res         - http response
      * @param filterChain - chain of filters
-     * @throws IOException - exception connected with files
+     * @throws IOException      - exception connected with files
      * @throws ServletException - exception connected with servlet
      */
     @Override
-    public void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain filterChain)
+    public void doFilterInternal(HttpServletRequest req,
+                                 HttpServletResponse res,
+                                 FilterChain filterChain)
             throws IOException, ServletException {
 
         String token = jwtTokenUtil.resolveToken(req);
@@ -54,17 +55,19 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
             if (username != null
                     && SecurityContextHolder.getContext().getAuthentication() == null) {
-                UserDetails userDetails
-                        = this.jwtUserDetailsService.loadUserByUsername(username);
+                UserDetails userDetails = this.jwtUserDetailsService
+                        .loadUserByUsername(username);
                 if (jwtTokenUtil.validateToken(token, userDetails)) {
                     UsernamePasswordAuthenticationToken auth
                             = jwtTokenUtil.getAuthentication(token);
                     if (auth != null) {
-                        SecurityContextHolder.getContext().setAuthentication(auth);
+                        SecurityContextHolder
+                                .getContext()
+                                .setAuthentication(auth);
                     }
                 }
             }
-        } catch(ExpiredJwtException e) {
+        } catch (ExpiredJwtException e) {
         }
 
         filterChain.doFilter(req, res);

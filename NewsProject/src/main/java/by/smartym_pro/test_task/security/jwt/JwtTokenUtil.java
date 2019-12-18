@@ -21,7 +21,6 @@ import java.util.function.Function;
  * @author Semizhon Roman
  * @version 1.0
  */
-
 @Component
 public final class JwtTokenUtil {
 
@@ -52,7 +51,7 @@ public final class JwtTokenUtil {
     public UsernamePasswordAuthenticationToken getAuthentication(String token) {
         UserDetails userDetails
                 = this.userDetailsService.loadUserByUsername(getUsernameFromToken(token));
-        if(userDetails != null) {
+        if (userDetails != null) {
             return new UsernamePasswordAuthenticationToken(
                     userDetails, null, userDetails.getAuthorities());
         }
@@ -85,13 +84,13 @@ public final class JwtTokenUtil {
     public String resolveToken(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
 
-        if(bearerToken != null && bearerToken.startsWith("Bearer ")) {
+        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7);
         }
         return null;
     }
 
-    public boolean validateToken(String token, UserDetails userDetails){
+    public boolean validateToken(String token, UserDetails userDetails) {
         final String username = getUsernameFromToken(token);
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }

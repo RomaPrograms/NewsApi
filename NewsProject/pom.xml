@@ -14,7 +14,7 @@
     <groupId>NewsProject</groupId>
     <artifactId>by.smartym_pro.test_task</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <name>NewsProject</name>
+    <firstname>NewsProject</firstname>
     <description>Demo project for Spring Boot</description>
 
     <properties>

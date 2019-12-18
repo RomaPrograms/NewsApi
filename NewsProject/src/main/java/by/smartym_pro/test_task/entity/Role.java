@@ -4,6 +4,12 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 
+/**
+ * Jpa entity class which works with table "role".
+ *
+ * @author Semizhon Roman
+ * @version 1.0
+ */
 @Entity
 @Table(name = "roles")
 public class Role {
@@ -16,7 +22,8 @@ public class Role {
     @Column(name = "name")
     private String name;
 
-    public Role() {}
+    public Role() {
+    }
 
     public Role(String name) {
         this.name = name;

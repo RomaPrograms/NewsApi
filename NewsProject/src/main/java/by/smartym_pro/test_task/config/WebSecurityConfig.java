@@ -23,9 +23,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
  * @author Semizhon Roman
  * @version 1.0
  */
-
 @Configuration
-//Indicates that a class declares one or more @Bean methods and may be processed by the Spring container to generate bean definitions and service requests for those beans at runtime, for example:
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
@@ -65,7 +63,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/users").hasRole("ADMIN")
                 .antMatchers("/users/login", "/users/sign_up").permitAll()
                 .anyRequest().authenticated()
-                /*.and().exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)*/;
+                .and().exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint);
 
         httpSecurity.addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
     }

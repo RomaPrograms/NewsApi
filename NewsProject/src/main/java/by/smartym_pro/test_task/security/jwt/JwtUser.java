@@ -5,17 +5,24 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 
+/**
+ * Spring Security wrapper for class {@link by.smartym_pro.test_task.entity.User}.
+ *
+ * @author Eugene Suleimanov
+ * @version 1.0
+ */
+
 public class JwtUser implements UserDetails {
     private long id;
-    private String name;
+    private String firstname;
     private String username;
     private String password;
     private Collection<? extends GrantedAuthority> authorities;
 
-    public JwtUser(long id, String name, String username, String password,
+    public JwtUser(long id, String firstname, String username, String password,
                    Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
-        this.name = name;
+        this.firstname = firstname;
         this.username = username;
         this.password = password;
         this.authorities = authorities;
@@ -29,12 +36,12 @@ public class JwtUser implements UserDetails {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getFirstname() {
+        return firstname;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
     }
 
     @Override
@@ -82,16 +89,5 @@ public class JwtUser implements UserDetails {
     @Override
     public boolean isEnabled() {
         return false;
-    }
-
-    @Override
-    public String toString() {
-        return "JwtUser{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", authorities=" + authorities +
-                '}';
     }
 }

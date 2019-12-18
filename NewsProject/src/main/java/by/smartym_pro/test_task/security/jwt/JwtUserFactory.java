@@ -9,6 +9,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Implementation of Factory Method for class {@link JwtUser}.
+ *
+ * @author Semizhon Roman
+ * @version 1.0
+ */
+
 public class JwtUserFactory {
 
     public JwtUserFactory() {
@@ -17,7 +24,7 @@ public class JwtUserFactory {
     public static JwtUser create(User user) {
         return new JwtUser(
                 user.getId(),
-                user.getName(),
+                user.getFirstname(),
                 user.getUsername(),
                 user.getPassword(),
                 mapToGrantedAuthorities(new ArrayList<>(user.getRoles()))

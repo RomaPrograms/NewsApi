@@ -1,11 +1,16 @@
 package by.smartym_pro.test_task.entity;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.util.List;
 
+/**
+ * Jpa entity class which works with table "users".
+ *
+ * @author Semizhon Roman
+ * @version 1.0
+ */
 @Entity
 @Table(name = "users")
 public class User {
@@ -15,8 +20,8 @@ public class User {
     @Column(name = "id", length = 6, nullable = false)
     private long id;
 
-    @Column(name = "name", length = 30)
-    private String name;
+    @Column(name = "firstname", length = 30)
+    private String firstname;
 
     @Column(name = "username", unique = true, length = 30, nullable = false)
     private String username;
@@ -41,12 +46,12 @@ public class User {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getFirstname() {
+        return firstname;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
     }
 
     public String getUsername() {

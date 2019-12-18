@@ -5,6 +5,12 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+/**
+ * Class which starts project.
+ *
+ * @author Semizhon Roman
+ * @version 1.0
+ */
 @EnableJpaRepositories(basePackages = "by.smartym_pro.test_task.repository")
 @EnableTransactionManagement
 @SpringBootApplication

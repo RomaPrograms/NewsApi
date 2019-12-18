@@ -1,9 +1,19 @@
 package by.smartym_pro.test_task.entity;
 
 import org.hibernate.annotations.GenericGenerator;
+import javax.persistence.Column;
+import javax.persistence.ManyToOne;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
-import javax.persistence.*;
-
+/**
+ * Jpa entity class which works with table "comments".
+ *
+ * @author Semizhon Roman
+ * @version 1.0
+ */
 @Entity
 @Table(name = "comments")
 public class Comment {

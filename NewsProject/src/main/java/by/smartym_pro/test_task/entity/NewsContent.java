@@ -5,6 +5,12 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 import java.util.Set;
 
+/**
+ * Jpa entity class which works with table "newsContent".
+ *
+ * @author Semizhon Roman
+ * @version 1.0
+ */
 @Entity
 @Table(name = "newsContent")
 public class NewsContent {

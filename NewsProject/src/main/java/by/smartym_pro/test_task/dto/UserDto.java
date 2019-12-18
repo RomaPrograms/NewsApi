@@ -7,22 +7,21 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.List;
 
 /**
- * DTO class for user requests by ROLE_USER
+ * DTO class for user requests by ROLE_USER.
  *
  * @author Semizhon Roman
  * @version 1.0
  */
-
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UserDto {
-    private String name;
+    private String firstname;
     private String username;
     private String password;
     private List<Role> roles;
 
-    public User toUser(){
+    public User toUser() {
         User user = new User();
-        user.setName(name);
+        user.setFirstname(firstname);
         user.setUsername(username);
         user.setPassword(password);
         user.setRoles(roles);
@@ -30,10 +29,9 @@ public class UserDto {
         return user;
     }
 
-    //TODO change name to fiirst name.
     public static UserDto fromUser(User user) {
         UserDto userDto = new UserDto();
-        userDto.setName(user.getName());
+        userDto.setFirstname(user.getFirstname());
         userDto.setUsername(user.getUsername());
         userDto.setPassword(user.getPassword());
         userDto.setRoles(user.getRoles());
@@ -49,12 +47,12 @@ public class UserDto {
         this.username = username;
     }
 
-    public String getName() {
-        return name;
+    public String getFirstname() {
+        return firstname;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
     }
 
     public String getPassword() {
