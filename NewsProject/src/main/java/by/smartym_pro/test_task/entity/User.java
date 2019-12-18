@@ -31,17 +31,6 @@ public class User {
     private List<Role> roles;
 
     public User() {
-
-    }
-
-    //TODO delete JsonProperty.
-    public User(
-            @JsonProperty("name") String name,
-            @JsonProperty("username") String username,
-            @JsonProperty("password") String password) {
-        this.name = name;
-        this.username = username;
-        this.password = password;
     }
 
     public long getId() {

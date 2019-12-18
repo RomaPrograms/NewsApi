@@ -3,7 +3,6 @@ package by.smartym_pro.test_task.entity;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 @Table(name = "roles")
@@ -16,9 +15,6 @@ public class Role {
 
     @Column(name = "name")
     private String name;
-
-    @ManyToMany(mappedBy = "roles", fetch = FetchType.EAGER)
-    private List<User> users;
 
     public Role() {}
 
@@ -40,13 +36,5 @@ public class Role {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public List<User> getUsers() {
-        return users;
-    }
-
-    public void setUsers(List<User> users) {
-        this.users = users;
     }
 }

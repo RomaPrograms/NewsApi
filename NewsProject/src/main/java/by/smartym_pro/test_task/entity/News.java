@@ -26,7 +26,6 @@ public class News {
     }
 
     public News(@JsonProperty("topic") String topic) {
-        System.out.println("Lukky");
         this.topic = topic;
     }
 

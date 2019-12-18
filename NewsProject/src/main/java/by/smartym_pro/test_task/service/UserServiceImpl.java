@@ -2,14 +2,17 @@ package by.smartym_pro.test_task.service;
 
 import by.smartym_pro.test_task.entity.Role;
 import by.smartym_pro.test_task.entity.User;
+import by.smartym_pro.test_task.entity.UserRoleId;
+import by.smartym_pro.test_task.entity.UserRoleKey;
 import by.smartym_pro.test_task.repository.RoleRepository;
 import by.smartym_pro.test_task.repository.UserRepository;
-import jbcrypt.BCrypt;
+import by.smartym_pro.test_task.repository.UserRoleIdRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService{
@@ -21,22 +24,22 @@ public class UserServiceImpl implements UserService{
     private RoleRepository roleRepository;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository,
-                           RoleRepository roleRepository) {
-        this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
-    }
+    private UserRoleIdRepository userRoleIdRepository;
 
+    @Transactional
     @Override
     public User addUser(User user) {
-        Role roleUser = roleRepository.findByName("ROLE_USER");
-        List<Role> userRoles = new ArrayList<>();
-        userRoles.add(roleUser);
-
-        user.setRoles(userRoles);
-
+        Role role = roleRepository.findByName("USER");
+        user.getRoles().add(role);
         User registeredUser = userRepository.save(user);
-
+        UserRoleKey userRoleKey = new UserRoleKey();
+        UserRoleId userRoleId = new UserRoleId();
+//        userRoleId.setRole(role);
+//        userRoleId.setUser(user);
+        userRoleKey.setRoleId(role.getId());
+        userRoleKey.setUserId(user.getId());
+        userRoleId.setId(userRoleKey);
+        userRoleIdRepository.save(userRoleId);
         return registeredUser;
     }
 

@@ -19,7 +19,6 @@ public class Comment {
     @ManyToOne
     private NewsContent newsContent;
 
-
     public long getId() {
         return id;
     }

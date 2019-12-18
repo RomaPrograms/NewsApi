@@ -1,7 +1,6 @@
 package by.smartym_pro.test_task.security.jwt;
 
 import by.smartym_pro.test_task.entity.Role;
-import by.smartym_pro.test_task.entity.User;
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,10 +9,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 import java.util.function.Function;
@@ -26,7 +23,7 @@ import java.util.function.Function;
  */
 
 @Component
-public class JwtTokenUtil {
+public final class JwtTokenUtil {
 
     @Value("${jwt.token.secret}")
     private String secret;
@@ -36,12 +33,6 @@ public class JwtTokenUtil {
 
     @Autowired
     private UserDetailsService userDetailsService;
-
-
-    @PostConstruct
-    protected void init() {
-//        secret = Base64.getEncoder().encodeToString(secret.getBytes());
-    }
 
     public String generateToken(String login, List<Role> roles) {
         Claims claims = Jwts.claims().setSubject(login);
@@ -58,15 +49,18 @@ public class JwtTokenUtil {
                 .compact();
     }
 
-    //TODO change to username
     public UsernamePasswordAuthenticationToken getAuthentication(String token) {
         UserDetails userDetails
                 = this.userDetailsService.loadUserByUsername(getUsernameFromToken(token));
-        return new UsernamePasswordAuthenticationToken(
-                userDetails, null, userDetails.getAuthorities());
+        if(userDetails != null) {
+            return new UsernamePasswordAuthenticationToken(
+                    userDetails, null, userDetails.getAuthorities());
+        }
+
+        return null;
     }
 
-    public <T> T getClaimFromToken(String token, Function<Claims, T> claimsResolver) {
+    private <T> T getClaimFromToken(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = getAllClaimsFromToken(token);
         return claimsResolver.apply(claims);
     }
@@ -79,7 +73,7 @@ public class JwtTokenUtil {
         return getClaimFromToken(token, Claims::getSubject);
     }
 
-    public Date getExpirationDateFromToken(String token) {
+    private Date getExpirationDateFromToken(String token) {
         return getClaimFromToken(token, Claims::getExpiration);
     }
 
@@ -88,14 +82,9 @@ public class JwtTokenUtil {
         return expiration.before(new Date());
     }
 
-    /**
-     * Checks if request has a token.
-     *
-     * @param request - http request
-     * @return - token like a string
-     */
     public String resolveToken(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
+
         if(bearerToken != null && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7);
         }
@@ -110,9 +99,7 @@ public class JwtTokenUtil {
     private List<String> getRoleNames(List<Role> userRoles) {
         List<String> result = new ArrayList<>();
 
-        userRoles.forEach(role -> {
-            result.add(role.getName());
-        });
+        userRoles.forEach(role -> result.add(role.getName()));
 
         return result;
     }

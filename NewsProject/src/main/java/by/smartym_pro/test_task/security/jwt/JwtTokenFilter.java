@@ -1,11 +1,11 @@
 package by.smartym_pro.test_task.security.jwt;
 
 import by.smartym_pro.test_task.security.JwtUserDetailsService;
+import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -29,7 +29,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     private JwtTokenUtil jwtTokenUtil;
 
     @Autowired
-    private JwtUserDetailsService jwtUserDetailsService;;
+    private JwtUserDetailsService jwtUserDetailsService;
 
     /**
      * Checks if request has a token. If yes then extract the token.
@@ -45,29 +45,30 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             throws IOException, ServletException {
 
         String token = jwtTokenUtil.resolveToken(req);
-        System.out.println("we were here.");
         String username = null;
-        if(token != null) {
-            username = jwtTokenUtil.getUsernameFromToken(token);
-        }
-        System.out.println("Token: " + token);
 
-        if(username != null
-                && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails
-                    = this.jwtUserDetailsService.loadUserByUsername(username);
-            if (jwtTokenUtil.validateToken(token, userDetails)) {
-                UsernamePasswordAuthenticationToken auth
-                        = jwtTokenUtil.getAuthentication(token);
-                if (auth != null) {
-                    auth.setDetails(
-                            new WebAuthenticationDetailsSource().buildDetails(req));
-                    SecurityContextHolder.getContext().setAuthentication(auth);
+        try {
+            if (token != null) {
+                username = jwtTokenUtil.getUsernameFromToken(token);
+            }
+
+            if (username != null
+                    && SecurityContextHolder.getContext().getAuthentication() == null) {
+                UserDetails userDetails
+                        = this.jwtUserDetailsService.loadUserByUsername(username);
+                if (jwtTokenUtil.validateToken(token, userDetails)) {
+                    UsernamePasswordAuthenticationToken auth
+                            = jwtTokenUtil.getAuthentication(token);
+                    if (auth != null) {
+                        SecurityContextHolder.getContext().setAuthentication(auth);
+                    }
                 }
             }
+        } catch(ExpiredJwtException e) {
         }
 
         filterChain.doFilter(req, res);
     }
 
+    //todo add logination.
 }

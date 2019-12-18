@@ -8,6 +8,7 @@ import by.smartym_pro.test_task.entity.User;
 //import by.smartym_pro.test_task.security.jwt.JwtAuthenticationProvider;
 import by.smartym_pro.test_task.security.jwt.JwtTokenUtil;
 import by.smartym_pro.test_task.service.UserService;
+import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,9 +37,6 @@ import java.util.List;
 @RestController
 @CrossOrigin
 public class UserController {
-//    @Autowired
-//    private JwtAuthenticationProvider authenticationManager;
-
     @Autowired
     private AuthenticationManager authenticationManager;
 
@@ -49,6 +48,15 @@ public class UserController {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @GetMapping
+    public ResponseEntity getUser(@RequestParam("id") long id, HttpServletRequest request) {
+
+        HttpHeaders headers = new HttpHeaders();
+        User user = this.userService.findById(id);
+
+        return new ResponseEntity<>(user, headers, HttpStatus.OK);
+    }
 
     @PostMapping(value = "/login")
     public ResponseEntity login(@RequestBody JwtRequestDto requestDto) throws Exception {
@@ -78,7 +86,7 @@ public class UserController {
         }
 
         String hashedPassword
-                = passwordEncoder.encode((String) userDto.getPassword());
+                = passwordEncoder.encode(userDto.getPassword());
 
         userDto.setPassword(hashedPassword);
         List<Role> roles = new ArrayList<>();
@@ -94,10 +102,8 @@ public class UserController {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
         } catch (DisabledException e) {
-            System.out.println(e.getMessage());
             throw new Exception("USER_DISABLED", e);
         } catch (BadCredentialsException e) {
-            System.out.println(e);
             throw new Exception("INVALID_CREDENTIALS", e);
         }
     }
