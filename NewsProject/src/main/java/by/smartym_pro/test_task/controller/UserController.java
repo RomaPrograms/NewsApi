@@ -10,6 +10,8 @@ import by.smartym_pro.test_task.security.jwt.JwtTokenUtil;
 import by.smartym_pro.test_task.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -23,8 +25,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,9 +51,12 @@ public class UserController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    private final Logger LOGGER = LogManager.getLogger(UserController.class);
+
+
     @ApiOperation(value = "Gets user from the database by id.")
     @GetMapping
-    public ResponseEntity getUser(@RequestParam("id") long id, HttpServletRequest request) {
+    public ResponseEntity getUser(@RequestParam("id") long id) {
 
         HttpHeaders headers = new HttpHeaders();
         User user = this.userService.findById(id);
@@ -94,17 +97,15 @@ public class UserController {
 
             String hashedPassword
                     = passwordEncoder.encode(userDto.getPassword());
-
-            userDto.setPassword(hashedPassword);
             List<Role> roles = new ArrayList<>();
-            roles.add(new Role("USER"));
+            userDto.setPassword(hashedPassword);
             userDto.setRoles(roles);
             user = userDto.toUser();
             this.userService.addUser(user);
-        } catch(SQLException e) {
-            System.out.println(e);
         } catch (IncorrectDataException e) {
-            System.out.println(e);
+            LOGGER.error(e.getMessage());
+            return new ResponseEntity<>(e.getMessage(), headers,
+                    HttpStatus.BAD_REQUEST);
         }
 
         return new ResponseEntity<>(user, headers, HttpStatus.OK);
@@ -114,11 +115,9 @@ public class UserController {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
         } catch (DisabledException e) {
-            //todo
-            throw new Exception("USER_DISABLED", e);
+            LOGGER.error(e.getMessage());
         } catch (BadCredentialsException e) {
-            //todo
-            throw new Exception("INVALID_CREDENTIALS", e);
+            LOGGER.error(e.getMessage());
         }
     }
 }

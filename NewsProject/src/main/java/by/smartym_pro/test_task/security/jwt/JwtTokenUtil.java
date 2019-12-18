@@ -33,8 +33,8 @@ public final class JwtTokenUtil {
     @Autowired
     private UserDetailsService userDetailsService;
 
-    public String generateToken(String login, List<Role> roles) {
-        Claims claims = Jwts.claims().setSubject(login);
+    public String generateToken(String username, List<Role> roles) {
+        Claims claims = Jwts.claims().setSubject(username);
         claims.put("roles", getRoleNames(roles));
 
         Date now = new Date();

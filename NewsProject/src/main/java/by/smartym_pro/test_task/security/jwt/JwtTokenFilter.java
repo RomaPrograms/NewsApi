@@ -1,11 +1,15 @@
 package by.smartym_pro.test_task.security.jwt;
 
 import by.smartym_pro.test_task.security.JwtUserDetailsService;
+import by.smartym_pro.test_task.service.UserServiceImpl;
 import io.jsonwebtoken.ExpiredJwtException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -29,6 +33,8 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
     @Autowired
     private JwtUserDetailsService jwtUserDetailsService;
+
+    private final Logger LOGGER = LogManager.getLogger(JwtTokenFilter.class);
 
     /**
      * Checks if request has a token. If yes then extract the token.
@@ -61,6 +67,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                     UsernamePasswordAuthenticationToken auth
                             = jwtTokenUtil.getAuthentication(token);
                     if (auth != null) {
+                        auth.setDetails(new WebAuthenticationDetailsSource());
                         SecurityContextHolder
                                 .getContext()
                                 .setAuthentication(auth);
@@ -68,10 +75,9 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                 }
             }
         } catch (ExpiredJwtException e) {
+            LOGGER.error("Jwt was expired because of the time.");
         }
 
         filterChain.doFilter(req, res);
     }
-
-    //todo add logination.
 }
