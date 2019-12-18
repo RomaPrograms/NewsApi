@@ -5,8 +5,11 @@ import by.smartym_pro.test_task.dto.JwtResponseDto;
 import by.smartym_pro.test_task.dto.UserDto;
 import by.smartym_pro.test_task.entity.Role;
 import by.smartym_pro.test_task.entity.User;
+import by.smartym_pro.test_task.exception.IncorrectDataException;
 import by.smartym_pro.test_task.security.jwt.JwtTokenUtil;
 import by.smartym_pro.test_task.service.UserService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -21,6 +24,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,6 +37,7 @@ import java.util.List;
 @RequestMapping("/users")
 @RestController
 @CrossOrigin
+@Api(value = "User controller.")
 public class UserController {
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -46,6 +51,7 @@ public class UserController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @ApiOperation(value = "Gets user from the database by id.")
     @GetMapping
     public ResponseEntity getUser(@RequestParam("id") long id, HttpServletRequest request) {
 
@@ -55,6 +61,7 @@ public class UserController {
         return new ResponseEntity<>(user, headers, HttpStatus.OK);
     }
 
+    @ApiOperation(value = "Lets user login to his private cabinet.")
     @PostMapping(value = "/login")
     public ResponseEntity login(@RequestBody JwtRequestDto requestDto) throws Exception {
         try {
@@ -74,23 +81,31 @@ public class UserController {
         }
     }
 
+
+    @ApiOperation(value = "Lets user sign up on the site.")
     @PostMapping("/sign_up")
-    public ResponseEntity<User> addUser(@RequestBody UserDto userDto) {
+    public ResponseEntity addUser(@RequestBody UserDto userDto) {
         HttpHeaders headers = new HttpHeaders();
+        User user = null;
+        try {
+            if (userDto == null) {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
 
-        if (userDto == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            String hashedPassword
+                    = passwordEncoder.encode(userDto.getPassword());
+
+            userDto.setPassword(hashedPassword);
+            List<Role> roles = new ArrayList<>();
+            roles.add(new Role("USER"));
+            userDto.setRoles(roles);
+            user = userDto.toUser();
+            this.userService.addUser(user);
+        } catch(SQLException e) {
+            System.out.println(e);
+        } catch (IncorrectDataException e) {
+            System.out.println(e);
         }
-
-        String hashedPassword
-                = passwordEncoder.encode(userDto.getPassword());
-
-        userDto.setPassword(hashedPassword);
-        List<Role> roles = new ArrayList<>();
-        roles.add(new Role("USER"));
-        userDto.setRoles(roles);
-        User user = userDto.toUser();
-        this.userService.addUser(user);
 
         return new ResponseEntity<>(user, headers, HttpStatus.OK);
     }
